@@ -1,0 +1,47 @@
+<div class="container">
+  <section class="login_section">
+    <form class="login_form" [formGroup]="appForm" *ngIf="appForm"
+    (ngSubmit)="ngxOnSubmit()">
+      <ng-container class="form-group" formGroupName="formBody">
+        <div class="row flex-wrap form-group">
+          <label class="col-md-4 col-form-label">Email</label>
+          <div class="col-md-8" [class.has-danger]="validation.isEmailInvalid">
+            <input class="form-control" type="email" placeholder="email" formControlName="email"
+            [class.has-danger]="validation.isEmailInvalid" required>
+            <mat-error class="col-md-12" *ngIf="!validation.email?.errors?.['required'] && validation.email?.errors?.['email']">
+              Please enter a valid email address
+            </mat-error>
+            <mat-error class="col-md-12" *ngIf="validation.email?.errors?.['required'] && (validation.email?.touched || validation.email?.dirty)">
+              Email is <strong>required</strong>
+            </mat-error>
+          </div>
+        </div>
+        <div class="row flex-wrap form-group">
+          <label class="col-md-4 col-form-label">Mật khẩu</label>
+          <div class="col-md-8">
+            <input class="form-control" type="password" placeholder="password" formControlName="password"
+            [class.has-danger]="validation.isPasswordInvalid">
+            <mat-error class="col-md-12" *ngIf="validation.isPasswordInvalid">
+              password is <strong>required</strong>
+            </mat-error>
+          </div>
+        </div>
+        <div class="row flex-wrap form-group">
+          <div class="col-md-12 text-right">
+            <button
+              mat-raised-button
+              [disabled]="validation.isSubmitInvalid || isLoading"
+              type="submit"
+              color="primary"
+            >
+              <mat-icon *ngIf="isLoading">
+                <mat-spinner color="accent" diameter="20"></mat-spinner>
+              </mat-icon>
+              <span *ngIf="!isLoading">Đăng nhập</span>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </section>
+</div>

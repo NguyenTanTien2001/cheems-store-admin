@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.login_section {
+  border-width: 2px;
+  border-color: gray;
+  width: 400px;
+}
+.form-label {
+  display: flex;
+  padding-right: 0;
+  justify-content: flex-start;
+  align-items: flex-end;
+  font-size: medium;
+  text-align: center;
+  vertical-align: text-bottom;
+}
