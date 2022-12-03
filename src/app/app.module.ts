@@ -14,6 +14,7 @@ import { AuthService } from "./services/auth/auth.service";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { LoginModule } from "./pages/auth/login/login.module";
 import { AuthGuard } from "./services/security/auth.guard";
+import { ProductsManagementModule } from "./pages/products-management/products-management.module";
 
 @NgModule({
   declarations: [

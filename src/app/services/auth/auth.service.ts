@@ -50,4 +50,8 @@ export class AuthService {
       this.setUserId(id);
     }
   }
+
+  getUserData() {
+    
+  }
 }

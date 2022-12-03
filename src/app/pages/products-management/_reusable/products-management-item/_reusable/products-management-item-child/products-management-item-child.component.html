@@ -1,0 +1,121 @@
+<form class="m-form m-form--fit m-form--label-align-right" [formGroup]="appForm" *ngIf="appForm"
+  (ngSubmit)="ngxOnSubmit()">
+  <ng-container *ngIf="pageViewModel$ | async as pageViewModel">
+    <div class="m-portlet__body" formGroupName="formBody">
+      <div class="m-form__section m-form__section--first">
+        <div class="form-group m-form__group row m-form m-form--state">
+          <!-- Name  -->
+          <div class="col-md-4 col-form-label form-group m-form__group m-form m-form--state">
+            <label class="col-md-12 col-form-label">
+              Name
+            </label>
+            <div class="col-md-12">
+              <input type="text" class="form-control m-input" placeholder="" formControlName="name" />
+            </div>
+          </div>
+
+          <!-- categories -->
+          <div class="col-md-4 col-form-label form-group m-form__group m-form m-form--state">
+            <label class="col-md-12 col-form-label">
+              Categories
+            </label>
+            <div class="col-md-12" [class.has-danger]="validation.isCategoryIdInvalid">
+              <select placeholder="" class="form-control" formControlName="categoryId"
+                [class.has-danger]="validation.isCategoryIdInvalid">
+                <option *ngFor="let i of pageViewModel.categoriesDropdown" [ngValue]="i">
+                  {{ i.name }}
+                </option>
+              </select>
+              <span *ngIf="validation?.categoryId?.errors?.['required']">
+                Chose Package.
+              </span>
+            </div>
+          </div>
+
+          <!-- Price -->
+          <div class="col-md-4 form-group m-form__group m-form m-form--state">
+            <label class="col-md-12 col-form-label">
+              Price
+            </label>
+            <div class="col-md-12" [class.has-danger]="
+              validation.isPriceInvalid
+            ">
+              <input type="number" max="100" min="0" class="form-control m-input" placeholder="" formControlName="price"
+                [class.has-danger]="
+                validation.isPriceInvalid
+              " />
+              <!-- <span *ngIf="
+                validation?.price?.errors?.['required']
+              ">
+                please set price.
+              </span> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group m-form__group row m-form m-form--state">
+          <!-- Description -->
+          <div class="col-md-12 form-group m-form__group m-form m-form--state">
+            <label class="col-md-12 col-form-label"> Description </label>
+            <div class="col-md-12">
+              <textarea class="form-control m-input" placeholder="" formControlName="description" cols="40" rows="3"
+                style="resize: none"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group m-form__group row m-form m-form--state">
+          <!-- Warrenty Date -->
+          <div class="col-md-6 col-form-label form-group m-form__group m-form m-form--state">
+            <label class="col-md-12 col-form-label">
+              Warrenty Date
+            </label>
+            <div class="col-md-12">
+              <input type="date" class="form-control m-input" placeholder="" formControlName="warrentyDate" />
+            </div>
+          </div>
+
+          <!-- Delete At -->
+          <div class="col-md-6 col-form-label form-group m-form__group m-form m-form--state">
+            <label class="col-md-12 col-form-label">
+              Delete At
+            </label>
+            <div class="col-md-12">
+              <input type="date" class="form-control m-input" placeholder="" formControlName="deleteAt" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group m-form__group m-form m-form--state">
+          <!-- Metadata -->
+          <div class="form-group m-form__group m-form m-form--state">
+            <label class="col-md-12 col-form-label"> Metadata </label>
+            <div class="col-md-12">
+              <textarea class="form-control m-input" placeholder="" formControlName="metaData" cols="40" rows="3"
+                style="resize: none"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- submit button -->
+    <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
+      <div class="m-form__actions m-form__actions--solid">
+        <div class="row">
+          <div class="col-12 text-right">
+            <button type="button" class="btn btn-primary" (click)="btnTesting()">
+              testing
+            </button>
+            <button type="submit" class="btn btn-primary m--margin-right-10" [disabled]="validation.isSummitInvalid">
+              Save
+            </button>
+            <button type="button" class="btn btn-primary" (click)="btnClose()">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</form>

@@ -1,0 +1,20 @@
+<mat-drawer-container>
+  <mat-drawer mode="side">
+
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="row pt-3">
+      <div class="col-xl-9">
+        <app-products-management-filter-header [items]="(this.filterViewData$ | async)!">
+        </app-products-management-filter-header>
+      </div>
+      <div class="col-xl-3 pr-3">
+        <button type="button" class="btn btn-primary float-right mb-3" (click)="createProduct()">
+          Add Property other detail
+        </button>
+      </div>
+    </div>
+    <app-products-management-table-view [items]="(this.tableViewData$ | async)!">
+    </app-products-management-table-view>
+  </mat-drawer-content>
+</mat-drawer-container>

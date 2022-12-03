@@ -1,0 +1,72 @@
+<!-- <ng-template #defaultTabButtons>
+        <div class="mbp_pagination">
+            <ul class="page_navigation">
+
+                <pagination-template #p="paginationApi" id="pagination" maxSize="5" responsive="true"
+                    (pageChange)="cOnPageChange($event)">
+
+                    <div class="custom-pagination">
+                        <li class="page-item" [class.disabled]="p.isFirstPage()">
+                            <a (click)="p.previous()" class="page-link" tabindex="-1" [attr.aria-disabled]="p.isFirstPage()">
+                                 <span class="flaticon-left-arrow"></span> Prev
+                            </a>
+                        </li>
+                        <li *ngFor="let page of p.pages" class="page-item"
+                            [class.active]="p.getCurrent() === page.value"
+                            [class.current]="p.getCurrent() === page.value">
+                            <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value">
+                                <span class="page-link">{{ page.label }}</span>
+                            </a>
+                            <a *ngIf="p.getCurrent() === page.value">
+                                <span class="page-link" aria-current="page.value">{{ page.label }}</span>
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="page-item" [class.disabled]="p.isLastPage()">
+                            <a (click)="p.next()" class="page-link" [attr.aria-disabled]="p.isLastPage()">
+                                <span class="flaticon-right-arrow"></span>
+                            </a>
+                        </li>
+                    </div>
+
+                </pagination-template>
+            </ul>
+        </div>    
+</ng-template> -->
+
+<ng-template #defaultTabButtons>
+        <pagination-template #p="paginationApi" [id]="paginationIdx" [maxSize]="MAX_SIZE" responsive="true"
+        (pageChange)="cOnPageChange($event)">
+
+        <ul class="pagination">
+
+            <li class="paginate_button page-item previous" [class.disabled]="p.isFirstPage()">                
+                <a (click)="p.previous()" class="page-link" tabindex="-1"  [attr.aria-disabled]="p.isFirstPage()">
+                    <i class="la la-angle-left">
+                    </i>
+                </a>              
+            </li>
+            
+            <li *ngFor="let page of p.pages" class="paginate_button page-item active" [class.active]="p.getCurrent() === page.value"
+                        [class.current]="p.getCurrent() === page.value">
+                        <a (click)="p.setCurrent(page.value)" class="page-link" *ngIf="p.getCurrent() !== page.value">
+                            {{ page.label }}
+                        </a>
+                        <a *ngIf="p.getCurrent() === page.value" class="page-link" aria-current="page.value">
+                            {{ page.label }}
+                            <span class="sr-only">(current)</span>
+                        </a>
+            </li>
+
+        
+            <li class="paginate_button page-item next" id="m_table_1_next" [class.disabled]="p.isLastPage()">
+                <a (click)="p.next()" class="page-link" [attr.aria-disabled]="p.isLastPage()">
+                    <i class="la la-angle-right"></i>
+                </a>
+            </li>  
+        </ul>          
+        </pagination-template>  
+    
+</ng-template>
+
+<ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate: defaultTabButtons"></ng-container>

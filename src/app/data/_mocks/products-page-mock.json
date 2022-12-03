@@ -1,0 +1,74 @@
+{
+  "data": {
+    "products": {
+      "count": 3,
+      "data": [
+        {
+          "id": "00",
+          "name": "Laptop aSUS 000",
+          "description": "a very sus laptop",
+          "price": "6969",
+          "categoriesId": "02",
+          "warrentyDate": "15/11/2021",
+          "metaData": "IaMaNaMaZiNgMaN",
+          "deletedAt": ""
+        },
+        {
+          "id": "01",
+          "name": "Nồi inox Nvidia 1214",
+          "description": "nồi xịn hiệu nvidia",
+          "price": "7777",
+          "categoriesId": "01",
+          "warrentyDate": "15/11/2021",
+          "metaData": "AnTmAnNeEdMiLk",
+          "deletedAt": ""
+        },
+        {
+          "id": "02",
+          "name": "Khăn Đáy xã hội",
+          "description": "một cái khăn có hình Waifu yêu thích của bạn trên đó",
+          "price": "666",
+          "categoriesId": "03",
+          "warrentyDate": "15/11/2021",
+          "metaData": "IaMaWeEd",
+          "deletedAt": ""
+        }
+      ]
+    },
+    "categories": {
+      "count": 5,
+      "data": [
+        {
+          "id": "00",
+          "name": "Điện tử gia dụng",
+          "description": "Đồ điện tử gia dụng như nồi cơm, máy giặt, bếp điện,...",
+          "deleteAt": ""
+        },
+        {
+          "id": "01",
+          "name": "Gia dụng",
+          "description": "Đồ gia dụng như dao, chổi, thau,...",
+          "deleteAt": ""
+        },
+        {
+          "id": "02",
+          "name": "Điện tử thông minh",
+          "description": "Đồ điện tử thông minh như laptop, điện thoại, tivi,...",
+          "deleteAt": ""
+        },
+        {
+          "id": "03",
+          "name": "vật dụng thường ngày",
+          "description": "Khăn, tấm chùi chân, bột giặt, nước rửa chén,...",
+          "deleteAt": ""
+        },
+        {
+          "id": "04",
+          "name": "Vật dụng văn phòng",
+          "description": "bút, thước, đèn bàn,...",
+          "deleteAt": ""
+        }
+      ]
+    }
+  }
+}

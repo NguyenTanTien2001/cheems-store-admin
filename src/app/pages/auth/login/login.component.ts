@@ -40,15 +40,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     if(this._authService.isAuthenticated) {
-      this.alertService.open('', {
-        label: 'Already Login!',
-        status: TuiNotification.Warning,
-        autoClose: true,
-      }).subscribe({
-        complete: () => {
-          console.log('Notification is closed');
-        },
-      });
       this.location.back();
     }
     /**
