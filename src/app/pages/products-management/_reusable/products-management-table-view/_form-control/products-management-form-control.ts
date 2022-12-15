@@ -11,7 +11,6 @@ export class  ProductsManagementFormControl extends BasicTableBodyFormControl {
     public category: FormControl = new FormControl(''),
     public warrentyDate: FormControl = new FormControl(''),
     public metaData: FormControl = new FormControl(''),
-    public deletedAt: FormControl = new FormControl(''),
   ) {
     super(idxSelected);
   }

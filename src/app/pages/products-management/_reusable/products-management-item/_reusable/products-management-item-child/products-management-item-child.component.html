@@ -20,14 +20,14 @@
               Categories
             </label>
             <div class="col-md-12" [class.has-danger]="validation.isCategoryIdInvalid">
-              <select placeholder="" class="form-control" formControlName="categoryId"
+              <select placeholder="" class="form-control" formControlName="category"
                 [class.has-danger]="validation.isCategoryIdInvalid">
                 <option *ngFor="let i of pageViewModel.categoriesDropdown" [ngValue]="i">
                   {{ i.name }}
                 </option>
               </select>
               <span *ngIf="validation?.categoryId?.errors?.['required']">
-                Chose Package.
+                Chose Category.
               </span>
             </div>
           </div>
@@ -74,16 +74,6 @@
               <input type="date" class="form-control m-input" placeholder="" formControlName="warrentyDate" />
             </div>
           </div>
-
-          <!-- Delete At -->
-          <div class="col-md-6 col-form-label form-group m-form__group m-form m-form--state">
-            <label class="col-md-12 col-form-label">
-              Delete At
-            </label>
-            <div class="col-md-12">
-              <input type="date" class="form-control m-input" placeholder="" formControlName="deleteAt" />
-            </div>
-          </div>
         </div>
 
         <div class="form-group m-form__group m-form m-form--state">
@@ -104,10 +94,10 @@
       <div class="m-form__actions m-form__actions--solid">
         <div class="row">
           <div class="col-12 text-right">
-            <button type="button" class="btn btn-primary" (click)="btnTesting()">
+            <!-- <button type="button" class="btn btn-primary" (click)="btnTesting()">
               testing
-            </button>
-            <button type="submit" class="btn btn-primary m--margin-right-10" [disabled]="validation.isSummitInvalid">
+            </button> -->
+            <button type="submit" class="btn btn-primary m--margin-right-10">
               Save
             </button>
             <button type="button" class="btn btn-primary" (click)="btnClose()">

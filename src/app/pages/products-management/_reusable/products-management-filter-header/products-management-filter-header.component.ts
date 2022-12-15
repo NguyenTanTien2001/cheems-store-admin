@@ -52,4 +52,10 @@ export class ProductsManagementFilterHeaderComponent extends ChildViewManagement
     });
   }
 
+  public onReload() {
+    this.pageViewModel$.getValue().filters$.next({
+      ...this.pageViewModel$.getValue().filters$.getValue()
+    })
+  }
+
 }

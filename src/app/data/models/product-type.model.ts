@@ -7,9 +7,8 @@ export class ProductType {
     public name: string = '',
     public description: string = '',
     public price: string = '',
-    public categories: Category = new Category,
+    public categories: Category[] = [],
     public warrentyDate: string = '',
-    public metaData: string = '',
-    public deletedAt: string = ''
+    public metaData: string = ''
   ) {}
 }

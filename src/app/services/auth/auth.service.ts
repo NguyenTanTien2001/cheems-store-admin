@@ -52,6 +52,11 @@ export class AuthService {
   }
 
   getUserData() {
-    
+
+  }
+
+  getToken() {
+    const token = localStorage.getItem(GC_AUTH_TOKEN);
+    return token;
   }
 }

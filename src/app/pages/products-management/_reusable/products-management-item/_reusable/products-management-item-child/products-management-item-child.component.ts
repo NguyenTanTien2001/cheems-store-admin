@@ -9,8 +9,10 @@ import { ComponentMode } from 'src/app/components/framework/form-view/component-
 import { GraphQLFormViewComponent } from 'src/app/components/framework/form-view/graphql-form-view.component';
 import { Category } from 'src/app/data/models/category.model';
 import { ProductType } from 'src/app/data/models/product-type.model';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { ProductsManagementItemChildValidation } from './products-management-item-child-form.validation';
 import { ProductsManagementItemChildFormControl } from './_form-control/products-management-item-child-form-control';
+import { CREATE_PRODUCT_TYPE } from './_grapqls/create-product-type.graphql';
 import { GET_CATEGORY_LIST } from './_grapqls/get-category-list.graphql';
 import { ProductsManagementItemChildPageViewModel } from './_models/products-management-item-child-page-view.model';
 import { ProductsManagementItemChildViewData } from './_models/products-management-item-child-view-data.model';
@@ -51,6 +53,7 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
   constructor(
     _formBuilder: FormBuilder,
     _dev: DeveloperModeHelper,
+    public _authService: AuthService,
     private apollo: Apollo,
     private route: Router
   ) {
@@ -221,7 +224,6 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
       category: new FormControl(anyResult.categories),
       warrentyDate: new FormControl(anyResult.warrentyDate),
       metaData: new FormControl(anyResult.metaData),
-      deletedAt: new FormControl(anyResult.deletedAt),
     };
 
     return bodyControl;
@@ -251,7 +253,10 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
       const appMutationImpl = this.appCreateMutationImpl(MUT_VARS);
 
       const appMutationImpl$ = appMutationImpl.subscribe(_ => {
-        console.log('add Product type success!');
+        if(_) {
+          console.log('add Product type success!');
+          this.route.navigate(['products']);
+        }
       });
 
       this.subscriptions$.push(appMutationImpl$);
@@ -267,8 +272,6 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
 
       this.subscriptions$.push(appMutationInit2Impl$);
     }
-
-    this.route.navigate(['products']);
   }
 
   appQueryImpl(vars: any) {
@@ -319,17 +322,43 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
   }
 
   appCreateMutationImpl(vars: any) {
-    const item: ProductType = {
-      id: (0).toString(),
+    const item = {
       name: vars.item.name,
       description: vars.item.description,
       price: vars.item.price,
-      categories: vars.item.category,
+      categoriesId: vars.item.category.id,
       warrentyDate: vars.item.warrentyDate,
       metaData: vars.item.metaData,
-      deletedAt: vars.item.deletedAt,
     };
-    return of({});
+    const MUT_VARS = {
+      input: item
+    }
+    const token = this._authService.getToken();
+    let p$ = this.apollo.mutate({
+      mutation: CREATE_PRODUCT_TYPE,
+      variables: MUT_VARS,
+      context: {
+        headers: {
+          authorization: token ? `Bearer ${token}` : "",
+        }
+      }
+    }).pipe(
+      switchMap((_) => {
+
+        return of(_);
+      }),
+      map(result => {
+        const item = (<any>result).data;
+        let productType = item ? (<any>item)?.createProductType?.productTypes as ProductType : null;
+        return {
+          productType
+        };
+      }),
+      catchError(err => {
+        return throwError(err);
+      }),
+    )
+    return p$;
   }
 
   appUpdateMutationImpl(vars: any) {
@@ -341,7 +370,6 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
       categories: vars.item.category,
       warrentyDate: vars.item.warrentyDate,
       metaData: vars.item.metaData,
-      deletedAt: vars.item.deletedAt,
      };
 
     return of({});
