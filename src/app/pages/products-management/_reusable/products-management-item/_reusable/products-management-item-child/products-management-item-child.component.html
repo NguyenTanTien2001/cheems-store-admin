@@ -22,7 +22,7 @@
             <div class="col-md-12" [class.has-danger]="validation.isCategoryIdInvalid">
               <select placeholder="" class="form-control" formControlName="category"
                 [class.has-danger]="validation.isCategoryIdInvalid">
-                <option *ngFor="let i of pageViewModel.categoriesDropdown" [ngValue]="i">
+                <option *ngFor="let i of pageViewModel.categoriesDropdown" [ngValue]="i.id">
                   {{ i.name }}
                 </option>
               </select>
@@ -76,15 +76,244 @@
           </div>
         </div>
 
+        <div class="form-group">
+          <div class="ps-form underline">
+            <form [formGroup]="appMediaForm" *ngIf="appMediaForm" (ngSubmit)="ngxOnSubmit()">
+              <div formGroupName="formMedia">
+                <tui-input-files accept="image/*" formControlName="image"
+                  class="ps-btn text-capitalize ps-btn--gray" (reject)="onReject($event)"
+                  link="Add images for your product" [multiple]="true" label="">
+
+                </tui-input-files>
+
+              <div class="border mt-3" style="border-color: #BED62F;" *ngIf="(this.pageViewModel$ | async)?.progressPhoto != 0">
+                  <div style="height: 25px; background-color: #BED62F;" [style.width.%]="(this.pageViewModel$ | async)?.progressPhoto"></div>
+              </div>
+
+
+                <div
+                  *ngIf="(this.pageViewModel$ | async)?.photos?.length;else NoPhotos"
+                  class="row mt-5 list" cdkDropListGroup>
+                  <div
+                    *ngFor="let photo of (this.pageViewModel$ | async)?.photos; let i = index"
+                    cdkDropList class="col-3 mt-3 item" (cdkDropListDropped)="drop($event)"
+                    [cdkDropListData]="{item:photo,index:i}">
+                    <div cdkDrag class="" [cdkDragData]="i">
+                      <div [style.background-image]="'url(' + photo + ')'"
+                        style="background-size: cover; background-position: center; height: 200px;">
+                        <a (click)="deletePropertyImage(photo.id)" class="delete-image">
+                          <i class="lnir lnir-trash"></i>
+                        </a>
+                        <a download="" [href]=photo?.filePath class="download-image">
+                          <i class="lnir lnir-download"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #NoPhotos>
+                  <div class="alert alert-warning p-3 mt-3" role="alert" *ngIf="(this.pageViewModel$ | async)?.progressPhoto == 0" >
+                    <strong>You do not have any pictures uploaded.</strong>
+                  </div>
+                </ng-template>
+              <div class="alert alert-info p-3 mt-3" role="alert" *ngIf="(this.pageViewModel$ | async)?.progressPhoto != 0 && (this.pageViewModel$ | async)?.componentMode == 2">
+                  <strong>Image are being uploaded... {{ (this.pageViewModel$ | async)?.progressPhoto }}%</strong>
+              </div>
+              <div class="alert alert-warning p-3 mt-3" role="alert" *ngIf="(this.pageViewModel$ | async)?.isErrorPhoto == true">
+                  <strong>An issue occurred, please reload the page</strong>
+              </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
         <div class="form-group m-form__group m-form m-form--state">
           <!-- Metadata -->
-          <div class="form-group m-form__group m-form m-form--state">
-            <label class="col-md-12 col-form-label"> Metadata </label>
-            <div class="col-md-12">
-              <textarea class="form-control m-input" placeholder="" formControlName="metaData" cols="40" rows="3"
-                style="resize: none"></textarea>
+          <fieldset class="pl-2 pt-2 pb-2 pr-3 custom-fieldset  mb-10">
+            <legend class="float-none w-auto">Metadata</legend>
+            <div class="m-form__section m-form__section--first" formGroupName="metaData">
+
+              <div class="form-group m-form__group row m-form m-form--state">
+                <!-- audio -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                      Audio
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="audio">
+                  </div>
+                </div>
+                <!-- battery -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                      Battery
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="battery">
+                  </div>
+                </div>
+                <!-- camera -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                      Camera
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="camera">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group m-form__group row m-form m-form--state">
+                <!-- CPU series -->
+                <div class="col-md-6 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                      CPU Series
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="cPUSeries">
+                  </div>
+                </div>
+                <!-- GPU series -->
+                <div class="col-md-6 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                      GPU Series
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="gPUSeries">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group m-form__group row m-form m-form--state">
+                <!-- hard drive -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                      Hard drive
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="hardDrive">
+                  </div>
+                </div>
+                <!-- Ram -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                      Ram
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="ram">
+                  </div>
+                </div>
+                <!-- Operating System -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                      Operating System
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="operatingSystem">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group m-form__group row m-form m-form--state">
+                <!-- Published Date -->
+                <div class="col-md-4 col-form-label form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                    Published Date
+                  </label>
+                  <div class="col-md-12">
+                    <input type="date" class="form-control m-input" placeholder="" formControlName="publishedDate" />
+                  </div>
+                </div>
+                <!-- Series Name -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                    Series Name
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="seriesName">
+                  </div>
+                </div>
+                <!-- Manufacture -->
+                <div class="col-md-4 col-form-label form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                    Manufacture
+                  </label>
+                  <div class="col-md-12" [class.has-danger]="validation.isManufactureInvalid">
+                    <select placeholder="" class="form-control" formControlName="manufacturersId"
+                      [class.has-danger]="validation.isManufactureInvalid">
+                      <option *ngFor="let i of pageViewModel.manufacturesDropdown" [ngValue]="i.id">
+                        {{ i.name }}
+                      </option>
+                    </select>
+                    <span *ngIf="validation?.manufacture?.errors?.['required']">
+                      Chose Manufacture.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group m-form__group row m-form m-form--state">
+                <!-- color -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                      Color
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="color">
+                  </div>
+                </div>
+                <!-- Weight -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                    Weight
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="weight">
+                  </div>
+                </div>
+                <!-- Port -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                      Port
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="ports">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group m-form__group row m-form m-form--state">
+                <!-- dimensions -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                    Dimensions
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="dimensions">
+                  </div>
+                </div>
+                <!-- screenResolution -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                    Screen Resolution
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="screenResolution">
+                  </div>
+                </div>
+                <!-- wLAN -->
+                <div class="col-md-4 form-group m-form__group m-form m-form--state">
+                  <label class="col-md-12 col-form-label">
+                      Wifi LAN
+                  </label>
+                  <div class="col-md-12">
+                      <input type="text" class="form-control m-input" placeholder="" formControlName="wLAN">
+                  </div>
+                </div>
+              </div>
+
             </div>
-          </div>
+          </fieldset>
         </div>
       </div>
     </div>

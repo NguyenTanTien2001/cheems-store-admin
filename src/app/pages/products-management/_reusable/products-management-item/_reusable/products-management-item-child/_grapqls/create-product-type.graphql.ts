@@ -14,7 +14,32 @@ export const CREATE_PRODUCT_TYPE = gql`
   				description,
   				deletedAt
   			},
-  			metaData,
+  			metaDatas {
+          id,
+					audio,
+					battery,
+					camera,
+					color,
+					cPUSeries,
+					dimensions,
+					gPUSeries,
+					hardDrive,
+					manufacturersId
+					manufacturers {
+						id,
+						address,
+						description,
+						name
+					},
+					operatingSystem,
+					ports,
+					publishedDate,
+					ram,
+					screenResolution,
+					seriesName,
+					weight,
+					wLAN
+        },
   			price,
   			warrentyDate,
   			deletedAt

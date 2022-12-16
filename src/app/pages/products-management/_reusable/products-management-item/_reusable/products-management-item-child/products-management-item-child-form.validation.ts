@@ -14,7 +14,7 @@ export class ProductsManagementItemChildValidation {
     CATEGORY_ID: 'categoryId',
     WARRENTY_DATE: 'warrentyDate',
     METADATA: 'metaData',
-    DELETE_AT: 'deleteAt'
+    MANUFACTURE: 'manufacturersId'
   };
 
   // name
@@ -65,17 +65,17 @@ export class ProductsManagementItemChildValidation {
     return this.metaData?.invalid;
   }
 
-  // deleteAt
-  get deleteAt() {
-    return this._productsManagementItemChildComponent.formBody().get(this.input.DELETE_AT);
+  // Manufacture
+  get manufacture() {
+    return this._productsManagementItemChildComponent.formBody().get(this.input.MANUFACTURE);
   }
-  get isDeleteAtInvalid() {
-    return this.deleteAt?.invalid;
+  get isManufactureInvalid() {
+    return this.manufacture?.invalid;
   }
 
   // summit button
   get isSummitInvalid() {
-    return this.isNameInvalid || this.isDescriptionInvalid || this.isPriceInvalid || this.isCategoryIdInvalid || this.isWarrentyDateInvalid || this.isMetaDataInvalid || this.isDeleteAtInvalid;
+    return this.isNameInvalid || this.isDescriptionInvalid || this.isPriceInvalid || this.isCategoryIdInvalid || this.isWarrentyDateInvalid || this.isMetaDataInvalid || this.isManufactureInvalid;
   }
 }
 

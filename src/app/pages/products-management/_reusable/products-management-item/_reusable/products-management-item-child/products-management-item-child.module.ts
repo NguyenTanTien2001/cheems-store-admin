@@ -4,7 +4,11 @@ import { ProductsManagementItemChildComponent } from './products-management-item
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TuiRootModule, TuiDataListModule } from '@taiga-ui/core';
-import { TuiMultiSelectModule } from '@taiga-ui/kit';
+import { TuiFilesModule, TuiInputFilesModule, TuiMultiSelectModule } from '@taiga-ui/kit';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbdSortableModule } from 'src/app/components/framework/_page/_tables/sortable/sortable.module';
+import { TaigaUIModule } from 'src/app/components/tai-ga/taiga.module';
 
 
 
@@ -20,7 +24,12 @@ import { TuiMultiSelectModule } from '@taiga-ui/kit';
     TuiMultiSelectModule,
     TuiDataListModule,
     NgSelectModule,
-
+    NgbModule,
+    NgbdSortableModule,
+    TaigaUIModule,
+    TuiInputFilesModule,
+    TuiFilesModule,
+    DragDropModule
   ],
   exports: [ProductsManagementItemChildComponent]
 })
