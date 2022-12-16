@@ -21,7 +21,13 @@ const routes: Routes = [
     loadChildren: () => import('src/app/pages/products-management/products-management.module').then(
       (m) => m.ProductsManagementModule
     ),
-
+  },
+  {
+    canActivate: [AuthGuard],
+    path: 'categories', component: LayoutComponent,
+    loadChildren: () => import('src/app/pages/categories-management/categories-management.module').then(
+      (m) => m.CategoriesManagementModule
+    ),
   },
 
   {

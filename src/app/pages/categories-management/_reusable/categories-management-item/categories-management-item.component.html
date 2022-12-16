@@ -1,0 +1,5 @@
+<h4 class="font-weight-bold mb-4">{{ setTitle() }}</h4>
+<hr>
+<div class="m-content">
+    <app-categories-management-item-child [items]="(this.categoriesManagementItemChildViewData$ | async)!"></app-categories-management-item-child>
+</div>
