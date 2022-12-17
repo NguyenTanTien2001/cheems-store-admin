@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { Apollo, Mutation } from 'apollo-angular';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, throwError } from 'rxjs';
-import { tap, switchMap, map, timeout, takeLast, catchError, filter } from 'rxjs/operators';
+import { tap, switchMap, map, timeout, takeLast, catchError, filter, take } from 'rxjs/operators';
 import { DeveloperModeHelper } from 'src/app/components/framework/developer/developer-mode.helper';
 import { ComponentMode } from 'src/app/components/framework/form-view/component-mode.enum';
 import { GraphQLFormViewComponent } from 'src/app/components/framework/form-view/graphql-form-view.component';
@@ -19,6 +19,7 @@ import { ProductsManagementItemChildValidation } from './products-management-ite
 import { MetaDataFormControl, ProductsManagementItemChildFormControl } from './_form-control/products-management-item-child-form-control';
 import { CREATE_PRODUCT_TYPE } from './_grapqls/create-product-type.graphql';
 import { GET_DROPDOWN_LIST } from './_grapqls/get-dropdown-list.graphql';
+import { GET_PRODUCT_TYPE_BY_ID_QUERRY } from './_grapqls/get-product-type-by-id.graphql';
 import { ProductsManagementItemChildPageViewModel } from './_models/products-management-item-child-page-view.model';
 import { ProductsManagementItemChildViewData } from './_models/products-management-item-child-view-data.model';
 import { ProductsManagementItemChildViewResult } from './_models/products-management-item-child-view-result.model';
@@ -99,7 +100,7 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
         if (viewData_) {
           this.pageViewModel$.next({
             ...this.pageViewModel$.getValue(),
-            ...{ ProductTypeIdentifier: viewData_.productTypeIdentifier}
+            ...{ productTypeIdentifier: viewData_.productTypeIdentifier}
           });
         }
       }),
@@ -232,7 +233,7 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
 
     let modified$ = this.modifiedFiles$.subscribe((fileLike) => {
       // debugger;
-      // console.log(fileLike);
+      console.log(fileLike);
 
       this.handle(fileLike);
     });
@@ -254,7 +255,7 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
   }
 
   scaffoldFormControl(anyResult: ProductType): ProductsManagementItemChildFormControl {
-    const metaDataFormControl = this.scaffoldMetaDataFormControl(anyResult.metaData[0]);
+    const metaDataFormControl = this.scaffoldMetaDataFormControl(anyResult.metaDatas[0]);
 
     const bodyControl: ProductsManagementItemChildFormControl = {
       id: new FormControl(anyResult.id),
@@ -340,26 +341,55 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
   }
 
   appQueryImpl(vars: any) {
+    let productsTypeFilter = {
+      ids: [this.pageViewModel$.getValue().productTypeIdentifier]
+    }
+    console.log(productsTypeFilter);
+    let productsTypeQueryData = {
+      input: productsTypeFilter
+    }
+    let p$ = this.apollo.query({
+      fetchPolicy: "network-only",
+      query: GET_PRODUCT_TYPE_BY_ID_QUERRY,
+      variables: productsTypeQueryData
+    }).pipe(
+      switchMap((_) => {
 
-    const data: any[] = [];
-    const result = data.find((val, elem) => {
-      return vars.id === val.id;
-    });
+        return of(_);
+      }),
+      map(result => {
+        const item = (<any>result).data;
+        let productTypes = item ? (<any>item).productTypes.nodes as ProductType[] : [];
+        this.pageViewModel$.next({
+          ...this.pageViewModel$.getValue(),
+          photos: item ? (<any>item).productTypes.nodes[0].medias as Media[] : []
+        })
+        console.log(productTypes);
+        return {
+          productTypeResult: productTypes[0]
+        } as ProductsManagementItemChildViewResult;
+      }),
+      catchError(err => {
+        let errors =  err.toString().split(' ');
+        let errorMessage = errors[errors.length - 1];
+        return throwError(errorMessage);
+      }),
+      timeout(20000),
+      take(1),
+    )
 
-    const temp$ = {
-      productTypeResult: result
-    } as ProductsManagementItemChildViewResult
-
-    return of(temp$);
+    return p$;
   }
 
   appDropdownsQueryImpl(vars: any) {
     var MUT_VARS = {
-      // input: {},
-      // first: 0,
-      // after: '',
-      // last: 0,
-      // before: ''
+      input_M: {
+        isDeleted: false
+      },
+      input_C: {
+        isDeleted: false
+      }
+
     }
     let p$ = this.apollo.query({
       query: GET_DROPDOWN_LIST,
@@ -393,7 +423,7 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
       name: vars.item.name,
       description: vars.item.description,
       price: vars.item.price,
-      categoriesIds: [vars.item.category],
+      categoriesIds: [vars.item.category.id],
       warrentyDate: vars.item.warrentyDate,
       metaDatas: vars.item.metaData,
     };
@@ -475,7 +505,7 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
                 progressPhoto: 0
             }
         });
-      let fileDone: any = [];
+      let fileDone: Media[] = this.pageViewModel$.getValue().photos;
       // debugger;
       for (let index = 0; index < files.length; index++) {
         const file = files[index];
@@ -483,18 +513,18 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
         oFReader.readAsDataURL(file);
 
         oFReader.onload = (oFREvent) => {
-          fileDone.push(oFREvent?.target?.result);
+          let newImage = new Media();
+          newImage.filePath = oFREvent?.target?.result?.toString() || '';
+          fileDone.push(newImage);
+          console.log('testing 2: ', fileDone);
         };
-
-
-        // console.log('testing 2: ', this.pageViewModel$.getValue().photos);
       }
-
       this.pageViewModel$.next({
         ...this.pageViewModel$.getValue(),
         photos: fileDone,
       })
    }
+
    /////// END OF TUI -- FILEEE
    deletePropertyImage(photosId: string) {
     // let propertyIdentifier = this.pageViewModel$.getValue().propertyIdentifier;
@@ -533,10 +563,15 @@ export class ProductsManagementItemChildComponent extends GraphQLFormViewCompone
     // return p$;
   }
 
-public drop(event: CdkDragDrop<any>): void {
-    let photos = this.pageViewModel$.value.photos || [];
-    const newPhotos = photos.map((it: any) => it);
-    moveItemInArray(newPhotos, event.previousContainer.data.index, event.container.data.index);
-    this.pageViewModel$.value.photos = newPhotos;
-}
+  public drop(event: CdkDragDrop<any>): void {
+      let photos = this.pageViewModel$.value.photos || [];
+      const newPhotos = photos.map((it: any) => it);
+      moveItemInArray(newPhotos, event.previousContainer.data.index, event.container.data.index);
+      this.pageViewModel$.value.photos = newPhotos;
+  }
+
+  compareObjects(o1: any, o2: any): boolean {
+    console.log(o1.id == o2.id);
+    return o1.id == o2.id;
+  }
 }

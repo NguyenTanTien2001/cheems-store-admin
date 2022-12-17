@@ -1,0 +1,131 @@
+<div class="card-datatable table-responsive">
+  <form *ngIf="appForm" [formGroup]="appForm">
+    <table mat-table class="datatables-demo table table-striped table-bordered">
+      <thead formGroupName="formHeader">
+        <tr>
+          <th
+            sortable="ID"
+            class="sorting text-center"
+            tabindex="0"
+            rowspan="1"
+            colspan="1"
+          >
+            Id
+          </th>
+          <th
+            sortable="NAME"
+            class="sorting text-center"
+            tabindex="0"
+            rowspan="1"
+            colspan="1"
+          >
+            Name
+          </th>
+          <th
+            sortable="DESCRIPTION"
+            class="sorting text-center"
+            tabindex="0"
+            rowspan="1"
+            colspan="1"
+          >
+            Description
+          </th>
+          <th class="sorting text-center" tabindex="0" rowspan="1" colspan="1">
+            Action
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        formArrayName="formBody"
+        *ngIf="this.formBody()?.controls!.length > 0"
+        ngDefaultControl
+      >
+        <tr
+          *ngFor="
+            let item of this.formBody().controls
+              | paginate
+                : {
+                    id: (this.pageViewModel$ | async)?.paginationIdx,
+                    itemsPerPage: PAGE_SIZE,
+                    currentPage: CURRENT_PAGE,
+                    totalItems: COUNT
+                  };
+            let i = index
+          "
+        >
+          <td class="text-center">{{ item.get("id")?.value }}</td>
+          <td class="text-center">{{ item.get("name")?.value }}</td>
+          <td class="text-center">
+            {{ item.get("description")?.value }}
+          </td>
+          <td class="text-center" (click)="$event.stopPropagation()">
+            <button
+              class="btn btn-success mr-1 h-50"
+              type="button"
+              (click)="onEditPropertyOtherDetail(item.get('id')?.value)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              class="btn btn-danger ml-1"
+              type="button"
+              (click)="onRemovePropertyOtherDetail(item.get('id')?.value)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+
+<div class="row mb-3" *ngIf="pageViewModel$ | async as pageViewModel">
+  <div class="col-sm-12 col-md-5">
+    <div
+      class="dataTables_info"
+      id="m_table_1_info"
+      role="status"
+      aria-live="polite"
+    >
+      Showing
+      {{ pageViewModel.tableDisplayInformation.fromIdx }}
+      to
+      {{ pageViewModel?.tableDisplayInformation?.toIdx }}
+      of
+      {{ pageViewModel?.tableDisplayInformation?.totalItems }}
+      entries
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-3">
+    <app-pagination
+      [paginationIdx]="pageViewModel.paginationIdx"
+      class="dataTables_paginate paging_simple_numbers"
+      (appOnPageChange)="ngxOnPageChange($event)"
+    ></app-pagination>
+  </div>
+
+  <div class="col-sm-12 col-md-4 text-right dataTables_pager">
+    <div class="dataTables_length" id="m_table_1_length">
+      <label>Rows per page:</label>
+      <ng-select
+        class="d-inline-block ml-3"
+        *ngIf="pageViewModel"
+        [items]="pageViewModel.tableDisplayAmount.amounts"
+        #selectsort
+        [multiple]="false"
+        [closeOnSelect]="true"
+        bindLabel="title"
+        dropdownPosition="auto"
+        bindValue="value"
+        placeholder="Items"
+        [virtualScroll]="true"
+        [searchable]="false"
+        [clearable]="false"
+        (change)="ngxDisplayAmountOnChange($event)"
+        [(ngModel)]="selectedDisplayAmount"
+      >
+      </ng-select>
+    </div>
+  </div>
+</div>

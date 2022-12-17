@@ -3,7 +3,7 @@ import { CategoriesManagementItemChildComponent } from "./categories-management-
 export class CategoriesManagementItemChildValidation {
 
   constructor(
-    private _productsManagementItemChildComponent: CategoriesManagementItemChildComponent
+    private _categoryManagementItemChildComponent: CategoriesManagementItemChildComponent
   ) {}
 
   // the project input fields
@@ -14,7 +14,7 @@ export class CategoriesManagementItemChildValidation {
 
   // name
   get name() {
-    return this._productsManagementItemChildComponent.formBody().get(this.input.NAME);
+    return this._categoryManagementItemChildComponent.formBody().get(this.input.NAME);
   }
   get isNameInvalid() {
     return this.name?.invalid;
@@ -22,7 +22,7 @@ export class CategoriesManagementItemChildValidation {
 
   // description
   get description() {
-    return this._productsManagementItemChildComponent.formBody().get(this.input.DESCRIPTION);
+    return this._categoryManagementItemChildComponent.formBody().get(this.input.DESCRIPTION);
   }
   get isDescriptionInvalid() {
     return this.description?.invalid;

@@ -7,24 +7,24 @@ import { tap, switchMap, map, timeout, takeLast, catchError, filter, take } from
 import { DeveloperModeHelper } from 'src/app/components/framework/developer/developer-mode.helper';
 import { ComponentMode } from 'src/app/components/framework/form-view/component-mode.enum';
 import { GraphQLFormViewComponent } from 'src/app/components/framework/form-view/graphql-form-view.component';
-import { Category } from 'src/app/data/models/category.model';
+import { Manufacture } from 'src/app/data/models/manufacture.model';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { CategoriesManagementItemChildValidation } from './categories-management-item-child.validation';
-import { CategoriesManagementItemChildFormControl } from './_form-control/categories-management-item-child-form-control';
-import { CREATE_CATEGORY } from './_graphql/create-category.graphql';
-import { GET_CATEGORY_BY_ID_QUERRY } from './_graphql/get-category-by-id.graphql';
-import { UPDATE_CATEGORY } from './_graphql/update-category.graphql';
-import { CategoriesManagementItemChildPageViewModel } from './_models/categories-management-item-child-page-view.model';
-import { CategoriesManagementItemChildViewData } from './_models/categories-management-item-child-view-data.model';
-import { CategoriesManagementItemChildViewResult } from './_models/categories-management-item-child-view-result.model';
+import { ManufacturesManagementItemChildValidation } from './manufactures-management-item-child.validation';
+import { ManufacturesManagementItemChildFormControl } from './_form-control/manufactures-management-item-child-form-control';
+import { CREATE_MANUFACTURE } from './_graphql/create-manufacture.graphql';
+import { GET_MANUFACTURE_BY_ID_QUERRY } from './_graphql/get-manufacture-by-id.graphql';
+import { UPDATE_MANUFACTURE } from './_graphql/update-manufacture.graphql';
+import { ManufacturesManagementItemChildPageViewModel } from './_models/manufactures-management-item-child-page-view.model';
+import { ManufacturesManagementItemChildViewData } from './_models/manufactures-management-item-child-view-data.model';
+import { ManufacturesManagementItemChildViewResult } from './_models/manufactures-management-item-child-view-result.model';
 
 @Component({
-  selector: 'app-categories-management-item-child',
-  templateUrl: './categories-management-item-child.component.html',
-  styleUrls: ['./categories-management-item-child.component.scss']
+  selector: 'app-manufactures-management-item-child',
+  templateUrl: './manufactures-management-item-child.component.html',
+  styleUrls: ['./manufactures-management-item-child.component.scss']
 })
-export class CategoriesManagementItemChildComponent extends GraphQLFormViewComponent<CategoriesManagementItemChildPageViewModel> implements OnInit {
-  public validation: CategoriesManagementItemChildValidation;
+export class ManufacturesManagementItemChildComponent extends GraphQLFormViewComponent<ManufacturesManagementItemChildPageViewModel> implements OnInit {
+  public validation: ManufacturesManagementItemChildValidation;
 
   constructor(
     _formBuilder: FormBuilder,
@@ -35,13 +35,13 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
   ) {
     super(_formBuilder, _dev);
 
-    this.pageViewModel$ = new BehaviorSubject<CategoriesManagementItemChildPageViewModel>(new CategoriesManagementItemChildPageViewModel);
+    this.pageViewModel$ = new BehaviorSubject<ManufacturesManagementItemChildPageViewModel>(new ManufacturesManagementItemChildPageViewModel);
 
     this.appForm = this.appCreateFormGroup({}, this.prepareFormBodyControls(
-      new CategoriesManagementItemChildViewResult(new Category())
+      new ManufacturesManagementItemChildViewResult(new Manufacture())
     ));
 
-    this.validation = new CategoriesManagementItemChildValidation(this);
+    this.validation = new ManufacturesManagementItemChildValidation(this);
 
   }
 
@@ -51,12 +51,12 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
 
     const onInitDropdowns$ = combineLatest([this.items$]).pipe(
       tap(([viewData]) => {
-        let viewData_ = viewData as CategoriesManagementItemChildViewData;
+        let viewData_ = viewData as ManufacturesManagementItemChildViewData;
 
         if (viewData_) {
           this.pageViewModel$.next({
             ...this.pageViewModel$.getValue(),
-            ...{ categoryIdentifier: viewData_.categoryIdentifier}
+            ...{ manufactureIdentifier: viewData_.manufactureIdentifier}
           });
         }
       }),
@@ -92,29 +92,29 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
         tap(([viewData]) => {
 
 
-          let viewData_ = viewData as CategoriesManagementItemChildViewData;
+          let viewData_ = viewData as ManufacturesManagementItemChildViewData;
 
           if (viewData_) {
             this.pageViewModel$.next({ ...this.pageViewModel$.getValue(), ...{} });
           }
         }),
         switchMap(([viewData]) => {
-          let viewData_ = viewData as CategoriesManagementItemChildViewData;
+          let viewData_ = viewData as ManufacturesManagementItemChildViewData;
 
 
           if (!(!!viewData_)) {
             let _tempResult = {
-              categoryResult: new Category()
+              manufactureResult: new Manufacture()
             };
             return of(_tempResult);
           }
 
-          let _identifier = viewData_.categoryIdentifier ? viewData_.categoryIdentifier : null;
+          let _identifier = viewData_.manufactureIdentifier ? viewData_.manufactureIdentifier : null;
 
 
           if (!(!!_identifier)) {
             let _tempResult = {
-              categoryResult: new  Category()
+              manufactureResult: new  Manufacture()
             };
             return of(_tempResult);
           }
@@ -139,24 +139,24 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
     );
 
     const piped$ = (onInit$).pipe(
-      map((onInitResult: CategoriesManagementItemChildViewResult) => {
+      map((onInitResult: ManufacturesManagementItemChildViewResult) => {
         const _ = {
-          categoryResult: (onInitResult).categoryResult,
-        } as CategoriesManagementItemChildViewResult;
+          manufactureResult: (onInitResult).manufactureResult,
+        } as ManufacturesManagementItemChildViewResult;
 
         return _;
 
       })
     )
 
-    const onInit = piped$.subscribe((_: CategoriesManagementItemChildViewResult) => {
+    const onInit = piped$.subscribe((_: ManufacturesManagementItemChildViewResult) => {
         const childComponentViewResult = _;
 
 
         if (!!childComponentViewResult) {
           this.pageViewModel$.next({
             ...this.pageViewModel$.getValue(), ...{
-             componentResult: childComponentViewResult.categoryResult
+             componentResult: childComponentViewResult.manufactureResult
             }
           });
 
@@ -176,15 +176,15 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
     super.ngOnDestroy();
   }
 
-  prepareFormBodyControls(results: CategoriesManagementItemChildViewResult): FormGroup {
-    const bodyControl = this.scaffoldFormControl(results.categoryResult);
+  prepareFormBodyControls(results: ManufacturesManagementItemChildViewResult): FormGroup {
+    const bodyControl = this.scaffoldFormControl(results.manufactureResult);
     const bodyFormGroup = this._formBuilder.group(bodyControl);
 
     return bodyFormGroup;
   }
 
-  scaffoldFormControl(anyResult: Category): CategoriesManagementItemChildFormControl {
-    const bodyControl: CategoriesManagementItemChildFormControl = {
+  scaffoldFormControl(anyResult: Manufacture): ManufacturesManagementItemChildFormControl {
+    const bodyControl: ManufacturesManagementItemChildFormControl = {
       id: new FormControl(anyResult.id),
       name: new FormControl(anyResult.name),
       description: new FormControl(anyResult.description)
@@ -193,7 +193,7 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
     return bodyControl;
   }
 
-  appOnInit(MUT_VARS: any): Observable<CategoriesManagementItemChildViewResult> {
+  appOnInit(MUT_VARS: any): Observable<ManufacturesManagementItemChildViewResult> {
     const initQuery$ = this.appQueryImpl(MUT_VARS);
     return initQuery$;
   }
@@ -218,8 +218,8 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
 
       const appMutationImpl$ = appMutationImpl.subscribe(_ => {
         if(_) {
-          console.log('add category success!');
-          this.route.navigate(['categories']);
+          console.log('add manufacture success!');
+          this.route.navigate(['manufactures']);
         }
       });
 
@@ -232,8 +232,8 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
 
       const appMutationInit2Impl$ = appMutationInit2Impl.subscribe(_ => {
         if(_) {
-          console.log('update category success!');
-          this.route.navigate(['categories']);
+          console.log('update manufacture success!');
+          this.route.navigate(['manufactures']);
         }
       });
 
@@ -242,16 +242,16 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
   }
 
   appQueryImpl(vars: any) {
-    let categoriesFilter = {
-      ids: [this.pageViewModel$.getValue().categoryIdentifier],
+    let manufacturersFilter = {
+      ids: [this.pageViewModel$.getValue().manufactureIdentifier],
     }
-    let categoriesQueryData = {
-      input: categoriesFilter
+    let manufacturersQueryData = {
+      input: manufacturersFilter
     }
     let p$ = this.apollo.query({
       fetchPolicy: "network-only",
-      query: GET_CATEGORY_BY_ID_QUERRY,
-      variables: categoriesQueryData
+      query: GET_MANUFACTURE_BY_ID_QUERRY,
+      variables: manufacturersQueryData
     }).pipe(
       switchMap((_) => {
 
@@ -259,10 +259,10 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
       }),
       map(result => {
         const item = (<any>result).data;
-        let categories = item ? (<any>item).categories.nodes as Category[] : [];
+        let manufacturers = item ? (<any>item).manufacturers.nodes as Manufacture[] : [];
         return {
-          categoryResult: categories[0]
-        } as CategoriesManagementItemChildViewResult;
+          manufactureResult: manufacturers[0]
+        } as ManufacturesManagementItemChildViewResult;
       }),
       catchError(err => {
         let errors =  err.toString().split(' ');
@@ -290,7 +290,7 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
     }
     const token = this._authService.getToken();
     let p$ = this.apollo.mutate({
-      mutation: CREATE_CATEGORY,
+      mutation: CREATE_MANUFACTURE,
       variables: MUT_VARS,
       context: {
         headers: {
@@ -305,9 +305,9 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
       }),
       map(result => {
         const item = (<any>result).data;
-        let category = item ? (<any>item)?.createCategory?.categories as Category : null;
+        let manufacture = item ? (<any>item)?.createManufacturer?.manufacturers as Manufacture : null;
         return {
-          category
+          manufacture
         };
       }),
       catchError(err => {
@@ -328,7 +328,7 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
     }
     const token = this._authService.getToken();
     let p$ = this.apollo.mutate({
-      mutation: UPDATE_CATEGORY,
+      mutation: UPDATE_MANUFACTURE,
       variables: MUT_VARS,
       context: {
         headers: {
@@ -343,9 +343,9 @@ export class CategoriesManagementItemChildComponent extends GraphQLFormViewCompo
       }),
       map(result => {
         const item = (<any>result).data;
-        let category = item ? (<any>item)?.createCategory?.categories as Category : null;
+        let manufacture = item ? (<any>item)?.updateManufacturer?.manufacturers as Manufacture : null;
         return {
-          category
+          manufacture
         };
       }),
       catchError(err => {

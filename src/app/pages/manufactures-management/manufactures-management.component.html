@@ -5,16 +5,16 @@
   <mat-drawer-content>
     <div class="row pt-3">
       <div class="col-xl-9">
-        <app-products-management-filter-header [items]="(this.filterViewData$ | async)!">
-        </app-products-management-filter-header>
+        <app-manufactures-management-filter-header [items]="(this.filterViewData$ | async)!">
+        </app-manufactures-management-filter-header>
       </div>
-      <div class="col-xl-3 pr-3">
+      <div class="col-xl-3">
         <button type="button" class="btn btn-primary float-right mb-3" (click)="createProduct()">
-          Add Product Type
+          Add Manufacture
         </button>
       </div>
     </div>
-    <app-products-management-table-view [items]="(this.tableViewData$ | async)!">
-    </app-products-management-table-view>
+    <app-manufactures-management-table-view [items]="(this.tableViewData$ | async)!">
+    </app-manufactures-management-table-view>
   </mat-drawer-content>
 </mat-drawer-container>

@@ -29,6 +29,13 @@ const routes: Routes = [
       (m) => m.CategoriesManagementModule
     ),
   },
+  {
+    canActivate: [AuthGuard],
+    path: 'manufactures', component: LayoutComponent,
+    loadChildren: () => import('src/app/pages/manufactures-management/manufactures-management.module').then(
+      (m) => m.ManufacturesManagementModule
+    ),
+  },
 
   {
     path: 'login', component: LoginComponent

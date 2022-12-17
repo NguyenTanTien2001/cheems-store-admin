@@ -21,8 +21,8 @@
             </label>
             <div class="col-md-12" [class.has-danger]="validation.isCategoryIdInvalid">
               <select placeholder="" class="form-control" formControlName="category"
-                [class.has-danger]="validation.isCategoryIdInvalid">
-                <option *ngFor="let i of pageViewModel.categoriesDropdown" [ngValue]="i.id">
+                [class.has-danger]="validation.isCategoryIdInvalid" [compareWith]="compareObjects">
+                <option *ngFor="let i of pageViewModel.categoriesDropdown" [ngValue]="i">
                   {{ i.name }}
                 </option>
               </select>
@@ -99,7 +99,7 @@
                     cdkDropList class="col-3 mt-3 item" (cdkDropListDropped)="drop($event)"
                     [cdkDropListData]="{item:photo,index:i}">
                     <div cdkDrag class="" [cdkDragData]="i">
-                      <div [style.background-image]="'url(' + photo + ')'"
+                      <div [style.background-image]="'url(&quot;' + photo.filePath+ '&quot;)'"
                         style="background-size: cover; background-position: center; height: 200px;">
                         <a (click)="deletePropertyImage(photo.id)" class="delete-image">
                           <i class="lnir lnir-trash"></i>

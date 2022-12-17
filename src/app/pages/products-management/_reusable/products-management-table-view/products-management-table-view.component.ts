@@ -138,7 +138,7 @@ implements IGraphQLFormBasedTableViewComponent<ProductsManagementTableViewPageVi
       price: new FormControl(product.price),
       category: new FormControl(product.categories?.map((val) => val.name)),
       warrentyDate: new FormControl(product.warrentyDate),
-      metaData: new FormControl(product.metaData),
+      metaData: new FormControl(product.metaDatas),
     };
 
     return bodyControl;
@@ -152,6 +152,7 @@ implements IGraphQLFormBasedTableViewComponent<ProductsManagementTableViewPageVi
   public appQueryImpl(vars: any) {
     let productsTypeFilter = {
       names: vars.keyword.length!==0?vars.keyword:null,
+      isDeleted: false
     }
     let productsTypeQueryData = {
       input: productsTypeFilter,

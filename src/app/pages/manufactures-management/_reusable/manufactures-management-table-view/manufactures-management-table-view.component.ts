@@ -8,28 +8,29 @@ import { tap, switchMap, map, catchError } from 'rxjs/operators';
 import { DeveloperModeHelper } from 'src/app/components/framework/developer/developer-mode.helper';
 import { GraphQLFormBasedTableViewComponent, IGraphQLFormBasedTableViewComponent } from 'src/app/components/framework/table-view/graphql-table-form-based-view.component';
 import { Category, categoryTest } from 'src/app/data/models/category.model';
+import { Manufacture } from 'src/app/data/models/manufacture.model';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Filters } from '../../_models/filters.model';
-import { CategoriesManagementFilterHeaderViewData } from '../categories-management-filter-header/_models/categories-management-filter-header-view-data.model';
-import { CategoriesManagementFormControl } from './_form-control/categories-management-table-view-form-control';
-import { DELETE_CATEGORIES_MUTATION } from './_graphql/delete-categories.graphql';
-import { GET_CATEGORIES_LIST_QUERRY } from './_graphql/get-categories-list.graphql';
-import { CategoriesManagementTableViewPageViewModel } from './_models/categories-management-table-view-page-view.model';
-import { CategoriesManagementTableViewViewData } from './_models/categories-management-table-view-view-data.model';
-import { CategoriesManagementTableViewResult } from './_models/categories-management-table-view-view-result.model';
+import { ManufacturesManagementFilterHeaderViewData } from '../manufactures-management-filter-header/_models/manufactures-management-filter-header-view-data.model';
+import { ManufacturesManagementFormControl } from './_form-control/manufactures-management-table-view-form-control';
+import { DELETE_MANUFACTURE_MUTATION } from './_graphql/delete-manufactures.graphql';
+import { GET_MANUFACTURES_LIST_QUERRY } from './_graphql/get-manufactures-list.graphql';
+import { ManufacturesManagementTableViewPageViewModel } from './_models/manufactures-management-table-view-page-view.model';
+import { ManufacturesManagementTableViewViewData } from './_models/manufactures-management-table-view-view-data.model';
+import { ManufacturesManagementTableViewResult } from './_models/manufactures-management-table-view-view-result.model';
 
 @Component({
-  selector: 'app-categories-management-table-view',
-  templateUrl: './categories-management-table-view.component.html',
-  styleUrls: ['./categories-management-table-view.component.scss']
+  selector: 'app-manufactures-management-table-view',
+  templateUrl: './manufactures-management-table-view.component.html',
+  styleUrls: ['./manufactures-management-table-view.component.scss']
 })
-export class CategoriesManagementTableViewComponent
-extends GraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPageViewModel>
-implements IGraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPageViewModel>, OnInit, OnDestroy {
+export class ManufacturesManagementTableViewComponent
+extends GraphQLFormBasedTableViewComponent<ManufacturesManagementTableViewPageViewModel>
+implements IGraphQLFormBasedTableViewComponent<ManufacturesManagementTableViewPageViewModel>, OnInit, OnDestroy {
   testValue = new FormControl(true);
-  expandedElement!: Category | null;
+  expandedElement!: Manufacture | null;
 
-  public filterHeaderViewData$: BehaviorSubject<CategoriesManagementFilterHeaderViewData>;
+  public filterHeaderViewData$: BehaviorSubject<ManufacturesManagementFilterHeaderViewData>;
   public filters$: BehaviorSubject<Filters>;
   public cursor = '';
 
@@ -44,15 +45,15 @@ implements IGraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPage
     super(_formBuilder, _dev);
 
     const _pageViewModel =
-      new CategoriesManagementTableViewPageViewModel();
+      new ManufacturesManagementTableViewPageViewModel();
     _pageViewModel.paginationIdx =
-      'CategoriesManagementTableViewPaginator';
+      'ManufacturesManagementTableViewPaginator';
 
-    this.filterHeaderViewData$ = new BehaviorSubject<CategoriesManagementFilterHeaderViewData>(
-      new CategoriesManagementFilterHeaderViewData
+    this.filterHeaderViewData$ = new BehaviorSubject<ManufacturesManagementFilterHeaderViewData>(
+      new ManufacturesManagementFilterHeaderViewData
     );
 
-    this.pageViewModel$ = new BehaviorSubject<CategoriesManagementTableViewPageViewModel>(
+    this.pageViewModel$ = new BehaviorSubject<ManufacturesManagementTableViewPageViewModel>(
       _pageViewModel
     );
 
@@ -67,7 +68,7 @@ implements IGraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPage
 
     const onInit$ = combineLatest([this.items$]).pipe(
       tap(([viewData]) => {
-        const _viewData = viewData as CategoriesManagementTableViewViewData;
+        const _viewData = viewData as ManufacturesManagementTableViewViewData;
         if (_viewData) {
           this.CURRENT_PAGE = _viewData.page || 1;
 
@@ -77,7 +78,7 @@ implements IGraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPage
         }
       }),
       switchMap(([viewData]) => {
-        const _viewData = viewData as CategoriesManagementTableViewViewData;
+        const _viewData = viewData as ManufacturesManagementTableViewViewData;
         const MUT_VARS = {
           keyword: _viewData.keyword,
           page: _viewData.page || 1,
@@ -90,7 +91,7 @@ implements IGraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPage
     );
 
     const piped$ = onInit$;
-    const onInit = piped$.subscribe((tableViewResult: CategoriesManagementTableViewResult) => {
+    const onInit = piped$.subscribe((tableViewResult: ManufacturesManagementTableViewResult) => {
       const _tableViewResult = tableViewResult;
       console.log(_tableViewResult);
       this.COUNT = _tableViewResult.count;
@@ -103,7 +104,7 @@ implements IGraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPage
       });
 
       const formBodyControls = this.prepareFormBodyControls(
-        _tableViewResult.allCategories
+        _tableViewResult.allManufactures
       );
 
       this.appForm = this.appCreateFormGroup({}, formBodyControls);
@@ -129,8 +130,8 @@ implements IGraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPage
     return formBodyControls;
   }
 
-  scaffoldFormControl(product: Category, selectIdx: boolean = false): CategoriesManagementFormControl {
-    const bodyControl: CategoriesManagementFormControl = {
+  scaffoldFormControl(product: Category, selectIdx: boolean = false): ManufacturesManagementFormControl {
+    const bodyControl: ManufacturesManagementFormControl = {
       idxSelected: new FormControl(selectIdx),
       id: new FormControl(product.id),
       name: new FormControl(product.name),
@@ -157,7 +158,7 @@ implements IGraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPage
     }
     let p$ = this.apollo.query({
       fetchPolicy: "network-only",
-      query: GET_CATEGORIES_LIST_QUERRY,
+      query: GET_MANUFACTURES_LIST_QUERRY,
       variables: categoriesQueryData
     }).pipe(
       switchMap((_) => {
@@ -166,12 +167,12 @@ implements IGraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPage
       }),
       map(result => {
         const item = (<any>result).data;
-        let categories = item ? (<any>item).categories.nodes as Category[] : [];
-        let totalCount = item ? (<any>item).categories.totalCount: 0;
+        let manufacturers = item ? (<any>item).manufacturers.nodes as Manufacture[] : [];
+        let totalCount = item ? (<any>item).manufacturers.totalCount: 0;
         return {
-          allCategories: categories,
+          allManufactures: manufacturers,
           count: totalCount
-        } as CategoriesManagementTableViewResult;
+        } as ManufacturesManagementTableViewResult;
       }),
       catchError(err => {
         let errors =  err.toString().split(' ');
@@ -198,21 +199,21 @@ implements IGraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPage
         id: id
       }
     }
-    let deleteCategoryImpl$ = this.deleteCategoryImpl(MUT_VARS);
-    let deleteCategoryImpl = deleteCategoryImpl$.subscribe(_ => {
+    let deleteManufactureImpl$ = this.deleteManufacturesImpl(MUT_VARS);
+    let deleteManufactureImpl = deleteManufactureImpl$.subscribe(_ => {
 
     })
-    this.subscriptions$.push(deleteCategoryImpl);
+    this.subscriptions$.push(deleteManufactureImpl);
 
     this.items$.next({
       ...this.items$.getValue()
     })
   }
 
-  deleteCategoryImpl(vars: any) {
+  deleteManufacturesImpl(vars: any) {
     const token = this._authService.getToken();
     let p$ = this.apollo.mutate({
-      mutation: DELETE_CATEGORIES_MUTATION,
+      mutation: DELETE_MANUFACTURE_MUTATION,
       variables: vars,
       context: {
         headers: {
@@ -226,9 +227,9 @@ implements IGraphQLFormBasedTableViewComponent<CategoriesManagementTableViewPage
       }),
       map(result => {
         const item = (<any>result).data;
-        let category = item ? (<any>item)?.deleteCategory.categories as Category : null;
+        let manufacture = item ? (<any>item)?.deleteManufacturer.manufacturers as Manufacture : null;
         return {
-          category
+          manufacture
         };
       }),
       catchError(err => {

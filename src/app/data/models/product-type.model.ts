@@ -11,7 +11,7 @@ export class ProductType {
     public price: number = 0,
     public categories: Category[] = [],
     public warrentyDate: string = '',
-    public metaData: MetaData[] = [],
+    public metaDatas: MetaData[] = [],
     public medias: Media[] = [],
   ) {}
 }
